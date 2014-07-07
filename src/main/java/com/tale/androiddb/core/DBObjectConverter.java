@@ -5,8 +5,8 @@ package com.tale.androiddb.core;
  */
 public interface DBObjectConverter {
 
-    public ITable fromObject(Object object);
+    public Entry fromObject(Object object);
 
-    public Object toObject(ITable table);
+    public Object toObject(Entry table);
 
 }

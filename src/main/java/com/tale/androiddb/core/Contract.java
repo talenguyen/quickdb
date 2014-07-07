@@ -8,14 +8,14 @@ import java.util.List;
  * Date: 12/22/13
  * Time: 11:22 AM
  */
-public interface DBContract {
+public interface Contract {
 
     /**
      * Get array of database tables in Class.
      *
      * @return array of Class present for database table.
      */
-    public abstract List<Class<?>> getTables();
+    public abstract List<Table> getTables();
 
     /**
      * Get version of database

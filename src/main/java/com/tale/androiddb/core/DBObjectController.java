@@ -7,17 +7,17 @@ import java.util.List;
  */
 interface DBObjectController {
 
-    public long insert(ITable object);
+    public long insert(Entry object);
 
-    public int update(ITable object);
+    public int update(Entry object);
 
-    public int update(ITable object, String whereClause, String[] whereArgs);
+    public int update(Entry object, String whereClause, String[] whereArgs);
 
-    public int delete(ITable object);
+    public int delete(Entry object);
 
-    public int delete(ITable object, String whereClause, String[] whereArgs);
+    public int delete(Entry object, String whereClause, String[] whereArgs);
 
-    public Object queryById(String table, long id, ObjectFactory factory);
+    public Object queryById(String table, long id);
 
-    public List<Object> query(String table, String selection, String[] selectionArgs, ObjectFactory factory);
+    public List<Object> query(String table, String selection, String[] selectionArgs);
 }

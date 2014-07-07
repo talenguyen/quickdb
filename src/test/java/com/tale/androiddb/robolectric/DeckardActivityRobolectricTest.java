@@ -1,7 +1,7 @@
 package com.tale.androiddb.robolectric;
 
 import android.app.Activity;
-import com.tale.androiddb.robolectric.DeckardActivity;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;

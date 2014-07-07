@@ -1,75 +1,75 @@
 package com.tale.androiddb.core;
 
+import android.database.Cursor;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import android.database.Cursor;
 
 /**
  * Created by Giang on 6/28/2014.
  */
-class DBObjectControllerImpl implements DBObjectController{
+class DBObjectControllerImpl implements DBObjectController {
 
     private final DBController dbController;
+    private final SQLiteObjectHelper sqLiteObjectHelper;
 
-    DBObjectControllerImpl(DBController dbController) {
+    DBObjectControllerImpl(DBController dbController, SQLiteObjectHelper sqLiteObjectHelper) {
         this.dbController = dbController;
+        this.sqLiteObjectHelper = sqLiteObjectHelper;
     }
 
-    public long insert(ITable object) {
+    public long insert(Entry object) {
         try {
             dbController.open();
-            return dbController.insert(object.getName(), object.toContentValues());
+            return dbController.insert(object.getTable(), sqLiteObjectHelper.buildContentValues(object));
         } finally {
             dbController.close();
         }
     }
 
-    public int update(ITable object) {
+    public int update(Entry object) {
         try {
             dbController.open();
-            return dbController.update(object.getName(), object.toContentValues(), "_id LIKE ?", new String[]{String.valueOf(object.get_id())});
+            return dbController.update(object.getTable(), sqLiteObjectHelper.buildContentValues(object), "_id LIKE ?", new String[]{String.valueOf(object.get_id())});
         } finally {
             dbController.close();
         }
     }
 
-    public int update(ITable object, String whereClause, String[] whereArgs) {
+    public int update(Entry object, String whereClause, String[] whereArgs) {
         try {
             dbController.open();
-            return dbController.update(object.getName(), object.toContentValues(), whereClause, whereArgs);
+            return dbController.update(object.getTable(), sqLiteObjectHelper.buildContentValues(object), whereClause, whereArgs);
         } finally {
             dbController.close();
         }
     }
 
-    public int delete(ITable object) {
+    public int delete(Entry object) {
         try {
             dbController.open();
-            return dbController.delete(object.getName(), "_id LIKE ?", new String[]{String.valueOf(object.get_id())});
+            return dbController.delete(object.getTable(), "_id LIKE ?", new String[]{String.valueOf(object.get_id())});
         } finally {
             dbController.close();
         }
     }
 
-    public int delete(ITable object, String whereClause, String[] whereArgs) {
+    public int delete(Entry object, String whereClause, String[] whereArgs) {
         try {
             dbController.open();
-            return dbController.delete(object.getName(), whereClause, whereArgs);
+            return dbController.delete(object.getTable(), whereClause, whereArgs);
         } finally {
             dbController.close();
         }
     }
 
-    public Object queryById(String table, long id, ObjectFactory factory) {
+    public Object queryById(String table, long id) {
         Cursor cursor = null;
         try {
             dbController.open();
             cursor = dbController.quickQuery(table, "_id LIKE ?", new String[]{String.valueOf(id)});
             if (cursor != null && cursor.moveToFirst()) {
-                ITable object = factory.newInstance(table);
-                object.consume(cursor);
-                return object;
+                return sqLiteObjectHelper.buildObject(cursor);
             }
         } finally {
             if (cursor != null) {
@@ -80,7 +80,7 @@ class DBObjectControllerImpl implements DBObjectController{
         return null;
     }
 
-    public List<Object> query(String table, String selection, String[] selectionArgs, ObjectFactory factory) {
+    public List<Object> query(String table, String selection, String[] selectionArgs) {
         Cursor cursor = null;
         try {
             dbController.open();
@@ -88,8 +88,7 @@ class DBObjectControllerImpl implements DBObjectController{
             if (cursor != null && cursor.moveToFirst()) {
                 List<Object> result = new ArrayList<Object>(cursor.getCount());
                 do {
-                    ITable object = factory.newInstance(table);
-                    object.consume(cursor);
+                    Object object = sqLiteObjectHelper.buildObject(cursor);
                     result.add(object);
                 } while (cursor.moveToNext());
                 return result;

@@ -1,12 +1,12 @@
 package com.tale.androiddb.core;
 
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.CancellationSignal;
+
+import java.util.List;
 
 /**
  * Created by Giang on 6/28/2014.
@@ -18,34 +18,35 @@ public class DBManager {
     private DBObjectController dbObjectController;
     private SQLiteOpenHelper sqLiteOpenHelper;
     private DBObjectConverter dbObjectConverter;
-    private ObjectFactory objectFactory;
+    private SQLiteObjectHelper sqLiteObjectHelper;
+
+    private DBManager() {
+    }
 
     public static DBManager getInstance() {
         return ourInstance;
     }
 
-    private DBManager() {
-    }
-
-
-    public void init(Context context, DBContract contract) {
+    public void init(Context context, Contract contract) {
         if (sqLiteOpenHelper == null) {
             sqLiteOpenHelper = new SQLiteOpenHelperEx(context, contract);
         }
         if (dbController == null) {
             dbController = new DBControllerImpl(sqLiteOpenHelper);
         }
+
+        // TODO: instance a SQLiteObjectHelper
         if (dbObjectController == null) {
-            dbObjectController = new DBObjectControllerImpl(dbController);
+            dbObjectController = new DBObjectControllerImpl(dbController, sqLiteObjectHelper);
         }
+    }
+
+    public void setSqLiteObjectHelper(SQLiteObjectHelper sqLiteObjectHelper) {
+        this.sqLiteObjectHelper = sqLiteObjectHelper;
     }
 
     public void setDbObjectConverter(DBObjectConverter dbObjectConverter) {
         this.dbObjectConverter = dbObjectConverter;
-    }
-
-    public void setObjectFactory(ObjectFactory objectFactory) {
-        this.objectFactory = objectFactory;
     }
 
     public long insert(String table, String nullColumnHack, ContentValues values) {
@@ -139,7 +140,7 @@ public class DBManager {
     }
 
     public long insert(Object object) {
-        final ITable table = dbObjectConverter.fromObject(object);
+        final Entry table = dbObjectConverter.fromObject(object);
         if (table == null) {
             return 0;
         }
@@ -147,7 +148,7 @@ public class DBManager {
     }
 
     public int update(Object object) {
-        final ITable table = dbObjectConverter.fromObject(object);
+        final Entry table = dbObjectConverter.fromObject(object);
         if (table == null) {
             return 0;
         }
@@ -155,7 +156,7 @@ public class DBManager {
     }
 
     public int update(Object object, String whereClause, String[] whereArgs) {
-        final ITable table = dbObjectConverter.fromObject(object);
+        final Entry table = dbObjectConverter.fromObject(object);
         if (table == null) {
             return 0;
         }
@@ -163,7 +164,7 @@ public class DBManager {
     }
 
     public int delete(Object object) {
-        final ITable table = dbObjectConverter.fromObject(object);
+        final Entry table = dbObjectConverter.fromObject(object);
         if (table == null) {
             return 0;
         }
@@ -171,7 +172,7 @@ public class DBManager {
     }
 
     public int delete(Object object, String whereClause, String[] whereArgs) {
-        final ITable table = dbObjectConverter.fromObject(object);
+        final Entry table = dbObjectConverter.fromObject(object);
         if (table == null) {
             return 0;
         }
@@ -179,17 +180,11 @@ public class DBManager {
     }
 
     public Object queryById(String table, long id) {
-        if (objectFactory == null) {
-            throw new IllegalStateException("ObjectFactory must be set first");
-        }
-        return dbObjectController.queryById(table, id, objectFactory);
+        return dbObjectController.queryById(table, id);
     }
 
     public List<Object> query(String table, String selection, String[] selectionArgs) {
-        if (objectFactory == null) {
-            throw new IllegalStateException("ObjectFactory must be set first");
-        }
-        return dbObjectController.query(table, selection, selectionArgs, objectFactory);
+        return dbObjectController.query(table, selection, selectionArgs);
     }
 
 }
