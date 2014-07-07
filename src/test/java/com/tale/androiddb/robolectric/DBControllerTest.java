@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -42,7 +43,9 @@ public class DBControllerTest {
         SQLiteOpenHelperEx sqLiteOpenHelperEx = new SQLiteOpenHelperEx(context, new Contract() {
             @Override
             public List<Table> getTables() {
-                return Arrays.asList(Table.with("test").column(Column.with("name", Type.TEXT)));
+                return Arrays.asList(Table.with("test")
+                        .column(Column.with("name", Type.TEXT))
+                        .column(Column.with("_id", Type.INTEGER).primaryKey(true).autoincrement(true)));
             }
 
             @Override
@@ -69,6 +72,13 @@ public class DBControllerTest {
 
     @Test
     public void testQuery() throws Exception {
+        // Insert
+        ContentValues values = new ContentValues();
+        values.put("name", "Giang");
+        long id = dbController.insert("test", values);
+        assertTrue(id > 0);
+
+        // Query the inserted
         Cursor cursor = dbController.quickQuery("test", "name LIKE ?", new String[]{"Giang"});
         assertNotNull(cursor);
 
@@ -76,6 +86,18 @@ public class DBControllerTest {
 
         String name = cursor.getString(cursor.getColumnIndex("name"));
         assertEquals(name, "Giang");
+
+        // Delete the inserted
+        dbController.delete("test", "name LIKE ?", new String[]{"Giang"});
+
+        // Query to check delete
+        cursor = dbController.quickQuery("test", "name LIKE ?", new String[]{"Giang"});
+//        assertNull(cursor);
+
+        assertFalse(cursor.moveToFirst());
+//
+//        name = cursor.getString(cursor.getColumnIndex("name"));
+//        assertEquals(name, "Giang");
     }
 
     @After
