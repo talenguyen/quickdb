@@ -28,7 +28,7 @@ public class DBManager {
     }
 
 
-    public void init(Context context, DBContract contract) {
+    public void init(Context context, Contract contract) {
         if (sqLiteOpenHelper == null) {
             sqLiteOpenHelper = new SQLiteOpenHelperEx(context, contract);
         }
