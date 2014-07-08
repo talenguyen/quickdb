@@ -10,6 +10,6 @@ public interface SQLiteObjectHelper {
 
     ContentValues buildContentValues(Object object);
 
-    Object buildObject(Cursor cursor);
+    Object buildObject(String table, Cursor cursor);
 
 }

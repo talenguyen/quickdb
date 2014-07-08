@@ -15,10 +15,11 @@ import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMat
 public class DeckardEspressoTest extends ActivityInstrumentationTestCase2<DeckardActivity> {
 
     @SuppressWarnings("deprecation")
-     public DeckardEspressoTest() {
-       // This constructor was deprecated - but we want to support lower API levels.
-       super("com.tale.androiddb.activity", DeckardActivity.class);
-     }
+    public DeckardEspressoTest() {
+        // This constructor was deprecated - but we want to support lower API levels.
+        super("com.tale.androiddb.activity", DeckardActivity.class);
+    }
+
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -28,6 +29,6 @@ public class DeckardEspressoTest extends ActivityInstrumentationTestCase2<Deckar
 
     public void testCheckText() {
         onView(withId(R.id.text))
-            .check(matches(withText("Hello Espresso!")));
-      }
+                .check(matches(withText("Hello Espresso!")));
+    }
 }

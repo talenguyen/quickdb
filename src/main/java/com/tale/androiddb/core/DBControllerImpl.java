@@ -51,7 +51,7 @@ class DBControllerImpl implements DBController {
 
 
     @Override
-    public int update(String tableName, ContentValues values, String whereClause, String[] whereArgs) {
+    public int update(String tableName, ContentValues values, String whereClause, String... whereArgs) {
         // Verify pre-define.
         verify();
 
@@ -60,7 +60,7 @@ class DBControllerImpl implements DBController {
     }
 
     @Override
-    public int delete(String tableName, String whereClause, String[] whereArgs) {
+    public int delete(String tableName, String whereClause, String... whereArgs) {
         verify();
 
         return database.delete(tableName, whereClause, whereArgs);
@@ -94,12 +94,12 @@ class DBControllerImpl implements DBController {
     }
 
     @Override
-    public Cursor quickQuery(String table, String selection, String[] selectionArgs) {
+    public Cursor quickQuery(String table, String selection, String... selectionArgs) {
         return query(false, table, null, selection, selectionArgs, null, null, "_id asc", null);
     }
 
     @Override
-    public Cursor rawQuery(String sql, String[] selectionArgs) {
+    public Cursor rawQuery(String sql, String... selectionArgs) {
         verify();
         return database.rawQuery(sql, selectionArgs);
     }

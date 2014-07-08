@@ -171,14 +171,6 @@ public class DBManager {
         return dbObjectController.delete(table);
     }
 
-    public int delete(Object object, String whereClause, String[] whereArgs) {
-        final Entry table = dbObjectConverter.fromObject(object);
-        if (table == null) {
-            return 0;
-        }
-        return dbObjectController.delete(table, whereClause, whereArgs);
-    }
-
     public Object queryById(String table, long id) {
         return dbObjectController.queryById(table, id);
     }

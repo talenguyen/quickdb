@@ -36,7 +36,7 @@ class DBObjectControllerImpl implements DBObjectController {
         }
     }
 
-    public int update(Entry object, String whereClause, String[] whereArgs) {
+    public int update(Entry object, String whereClause, String... whereArgs) {
         try {
             dbController.open();
             return dbController.update(object.getTable(), sqLiteObjectHelper.buildContentValues(object), whereClause, whereArgs);
@@ -54,22 +54,13 @@ class DBObjectControllerImpl implements DBObjectController {
         }
     }
 
-    public int delete(Entry object, String whereClause, String[] whereArgs) {
-        try {
-            dbController.open();
-            return dbController.delete(object.getTable(), whereClause, whereArgs);
-        } finally {
-            dbController.close();
-        }
-    }
-
     public Object queryById(String table, long id) {
         Cursor cursor = null;
         try {
             dbController.open();
             cursor = dbController.quickQuery(table, "_id LIKE ?", new String[]{String.valueOf(id)});
             if (cursor != null && cursor.moveToFirst()) {
-                return sqLiteObjectHelper.buildObject(cursor);
+                return sqLiteObjectHelper.buildObject(table, cursor);
             }
         } finally {
             if (cursor != null) {
@@ -80,7 +71,7 @@ class DBObjectControllerImpl implements DBObjectController {
         return null;
     }
 
-    public List<Object> query(String table, String selection, String[] selectionArgs) {
+    public List<Object> query(String table, String selection, String... selectionArgs) {
         Cursor cursor = null;
         try {
             dbController.open();
@@ -88,7 +79,7 @@ class DBObjectControllerImpl implements DBObjectController {
             if (cursor != null && cursor.moveToFirst()) {
                 List<Object> result = new ArrayList<Object>(cursor.getCount());
                 do {
-                    Object object = sqLiteObjectHelper.buildObject(cursor);
+                    Object object = sqLiteObjectHelper.buildObject(table, cursor);
                     result.add(object);
                 } while (cursor.moveToNext());
                 return result;

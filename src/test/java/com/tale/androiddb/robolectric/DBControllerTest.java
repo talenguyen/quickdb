@@ -92,12 +92,8 @@ public class DBControllerTest {
 
         // Query to check delete
         cursor = dbController.quickQuery("test", "name LIKE ?", new String[]{"Giang"});
-//        assertNull(cursor);
 
         assertFalse(cursor.moveToFirst());
-//
-//        name = cursor.getString(cursor.getColumnIndex("name"));
-//        assertEquals(name, "Giang");
     }
 
     @After
