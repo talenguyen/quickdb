@@ -1,6 +1,7 @@
 package com.tale.androiddb.core;
 
 import android.database.Cursor;
+import android.os.CancellationSignal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,8 @@ class DBObjectControllerImpl implements DBObjectController {
         }
     }
 
-    public Object queryById(String table, long id) {
+    @Override
+    public Object queryObjectsById(String table, long id) {
         Cursor cursor = null;
         try {
             dbController.open();
@@ -71,11 +73,22 @@ class DBObjectControllerImpl implements DBObjectController {
         return null;
     }
 
-    public List<Object> query(String table, String selection, String... selectionArgs) {
+    @Override
+    public List<Object> queryObjects(String table, String selection, String... selectionArgs) {
+        return queryObjects(false, table, null, selection, selectionArgs, null, null, "_id asc", null);
+    }
+
+    @Override
+    public List<Object> queryObjects(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
+        return queryObjects(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+    }
+
+    @Override
+    public List<Object> queryObjects(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit, CancellationSignal cancellationSignal) {
         Cursor cursor = null;
         try {
             dbController.open();
-            cursor = dbController.quickQuery(table, selection, selectionArgs);
+            cursor = dbController.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit, cancellationSignal);
             if (cursor != null && cursor.moveToFirst()) {
                 List<Object> result = new ArrayList<Object>(cursor.getCount());
                 do {
@@ -92,4 +105,20 @@ class DBObjectControllerImpl implements DBObjectController {
         }
         return null;
     }
+
+    @Override
+    public List<Object> queryObjects(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
+        return null;
+    }
+
+    @Override
+    public List<Object> queryObjects(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
+        return null;
+    }
+
+    @Override
+    public List<Object> rawQueryObjects(String sql, String... selectionArgs) {
+        return null;
+    }
+
 }
