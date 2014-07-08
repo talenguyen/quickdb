@@ -17,7 +17,7 @@ public interface DBObjectController {
 
     public int delete(Entry object);
 
-    public Object queryObjectsById(String table, long id);
+    public Object queryObjectById(String table, long id);
 
     public List<Object> queryObjects(String table, String selection, String... selectionArgs);
 
@@ -94,5 +94,5 @@ public interface DBObjectController {
      * that List<Object>s are not synchronized, see the documentation for more
      * details.
      */
-    public List<Object> rawQueryObjects(String sql, String... selectionArgs);
+    public List<Object> rawQueryObjects(String table, String sql, String... selectionArgs);
 }

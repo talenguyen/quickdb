@@ -143,7 +143,7 @@ public class DBObjectControllerTest {
         long id = insertAMockPerson();
         assertTrue(id == 1); // Make sure the object has been inserted.
 
-        Object object = dbObjectController.queryById("Person", id);
+        Object object = dbObjectController.queryObjectById("Person", id);
         assertNotNull(object); // Make sure object not null.
 
         assertThat(object).isInstanceOf(Person.class); // Make sure that object is instance of Person.
@@ -161,7 +161,7 @@ public class DBObjectControllerTest {
 
         assertTrue(id == 2); // Make sure the are 2 objects has been inserted.
 
-        Object object = dbObjectController.queryById("Person", id);
+        Object object = dbObjectController.queryObjectById("Person", id);
         assertNotNull(object); // Make sure object not null.
 
         assertThat(object).isInstanceOf(Person.class); // Make sure that object is instance of Person.
@@ -178,7 +178,29 @@ public class DBObjectControllerTest {
 
         assertTrue(id == 2); // Make sure the are 2 objects has been inserted.
 
-        List<Object> objects = dbObjectController.query("Person", "name LIKE ?", "Giang");
+        List<Object> objects = dbObjectController.queryObjects("Person", "name LIKE ?", "Giang");
+        assertNotNull(objects); // Make sure object not null.
+
+        assertThat(objects).hasSize(2);
+
+        for (Object object : objects) {
+            assertThat(object).isNotNull();
+            assertThat(object).isInstanceOf(Person.class);
+
+            Person person = (Person) object;
+            assertThat(person.name).isEqualTo("Giang");
+        }
+    }
+
+    @Test
+    public void testRawQuery() throws Exception {
+        // Insert a mock object.
+        insertAMockPerson();
+        long id = insertAMockPerson();
+
+        assertTrue(id == 2); // Make sure the are 2 objects has been inserted.
+
+        List<Object> objects = dbObjectController.rawQueryObjects("Person", "select * from Person where name LIKE ?", "Giang");
         assertNotNull(objects); // Make sure object not null.
 
         assertThat(objects).hasSize(2);

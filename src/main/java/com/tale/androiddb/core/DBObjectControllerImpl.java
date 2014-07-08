@@ -56,7 +56,7 @@ class DBObjectControllerImpl implements DBObjectController {
     }
 
     @Override
-    public Object queryObjectsById(String table, long id) {
+    public Object queryObjectById(String table, long id) {
         Cursor cursor = null;
         try {
             dbController.open();
@@ -80,7 +80,7 @@ class DBObjectControllerImpl implements DBObjectController {
 
     @Override
     public List<Object> queryObjects(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
-        return queryObjects(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+        return queryObjects(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit, null);
     }
 
     @Override
@@ -89,35 +89,49 @@ class DBObjectControllerImpl implements DBObjectController {
         try {
             dbController.open();
             cursor = dbController.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit, cancellationSignal);
-            if (cursor != null && cursor.moveToFirst()) {
-                List<Object> result = new ArrayList<Object>(cursor.getCount());
-                do {
-                    Object object = sqLiteObjectHelper.buildObject(table, cursor);
-                    result.add(object);
-                } while (cursor.moveToNext());
-                return result;
-            }
+            return parseCursor(table, cursor);
         } finally {
             if (cursor != null) {
                 cursor.close();
             }
             dbController.close();
         }
-        return null;
     }
 
     @Override
     public List<Object> queryObjects(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
-        return null;
+        return queryObjects(table, columns, selection, selectionArgs, groupBy, having, orderBy, null);
     }
 
     @Override
     public List<Object> queryObjects(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
-        return null;
+        return queryObjects(false, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
     }
 
     @Override
-    public List<Object> rawQueryObjects(String sql, String... selectionArgs) {
+    public List<Object> rawQueryObjects(String table, String sql, String... selectionArgs) {
+        Cursor cursor = null;
+        try {
+            dbController.open();
+            cursor = dbController.rawQuery(sql, selectionArgs);
+            return parseCursor(table, cursor);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            dbController.close();
+        }
+    }
+
+    private List<Object> parseCursor(String table, Cursor cursor) {
+        if (cursor != null && cursor.moveToFirst()) {
+            List<Object> result = new ArrayList<Object>(cursor.getCount());
+            do {
+                Object object = sqLiteObjectHelper.buildObject(table, cursor);
+                result.add(object);
+            } while (cursor.moveToNext());
+            return result;
+        }
         return null;
     }
 
