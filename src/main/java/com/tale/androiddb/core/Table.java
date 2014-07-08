@@ -11,10 +11,10 @@ import java.util.List;
  */
 public class Table {
 
-    public static final Joiner joiner = Joiner.on(",").skipNulls();
+    private static final Joiner joiner = Joiner.on(",").skipNulls();
 
-    final String name;
-    List<Column> columns;
+    private final String name;
+    private List<Column> columns;
 
     private Table(String name) {
         this.name = name;

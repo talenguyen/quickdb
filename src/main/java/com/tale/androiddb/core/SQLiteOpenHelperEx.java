@@ -9,7 +9,7 @@ import java.util.List;
 
 public class SQLiteOpenHelperEx extends SQLiteOpenHelper {
 
-    private Contract contract;
+    private final Contract contract;
 
     public SQLiteOpenHelperEx(Context context, Contract contract) {
         super(context, contract.getDBName(), null, contract.getDBVersion());
@@ -23,8 +23,7 @@ public class SQLiteOpenHelperEx extends SQLiteOpenHelper {
             return;
         }
 
-        for (int i = 0, count = tables.size(); i < count; i++) {
-            final Table table= tables.get(i);
+        for (final Table table : tables) {
             final String createStatement = table.buildCreateStatement();
             if (TextUtils.isEmpty(createStatement)) {
                 throw new NullPointerException("The CREATE statement must not be NULL or EMPTY");
@@ -40,8 +39,7 @@ public class SQLiteOpenHelperEx extends SQLiteOpenHelper {
             return;
         }
 
-        for (int i = 0, count = tables.size(); i < count; i++) {
-            final Table table= tables.get(i);
+        for (final Table table : tables) {
             final String deleteStatement = table.buildDeleteStatement();
             if (TextUtils.isEmpty(deleteStatement)) {
                 throw new NullPointerException("The DELETE statement must not be NULL or EMPTY");

@@ -103,7 +103,7 @@ public class DBObjectControllerTest {
         person.name = "Giang Nguyen";
 
         // Execute update operation.
-        int count = dbObjectController.update(person, "name LIKE ?", new String[]{"Giang"});
+        int count = dbObjectController.update(person, "name LIKE ?", "Giang");
         assertTrue(count == 1); // Check one object must be update.
     }
 
@@ -119,7 +119,7 @@ public class DBObjectControllerTest {
         Person person = mockPerson("Giang Nguyen");
 
         // Execute update operation.
-        int count = dbObjectController.update(person, "name LIKE ?", new String[]{"Giang"});
+        int count = dbObjectController.update(person, "name LIKE ?", "Giang");
         assertTrue(count == 2); // Check 2 objects must be update.
     }
 
@@ -178,13 +178,12 @@ public class DBObjectControllerTest {
 
         assertTrue(id == 2); // Make sure the are 2 objects has been inserted.
 
-        List<Object> objects = dbObjectController.query("Person", "name LIKE ?", new String[]{"Giang"});
+        List<Object> objects = dbObjectController.query("Person", "name LIKE ?", "Giang");
         assertNotNull(objects); // Make sure object not null.
 
         assertThat(objects).hasSize(2);
 
-        for (int i = 0; i < objects.size(); i++) {
-            Object object = objects.get(i);
+        for (Object object : objects) {
             assertThat(object).isNotNull();
             assertThat(object).isInstanceOf(Person.class);
 

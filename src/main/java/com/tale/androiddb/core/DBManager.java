@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class DBManager {
 
-    private static DBManager ourInstance = new DBManager();
+    private static final DBManager ourInstance = new DBManager();
     private DBControllerImpl dbController;
     private DBObjectController dbObjectController;
     private SQLiteOpenHelper sqLiteOpenHelper;

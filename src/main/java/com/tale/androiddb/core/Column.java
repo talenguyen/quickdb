@@ -9,12 +9,12 @@ public class Column {
 
     private static final Joiner joiner = Joiner.on(" ").skipNulls();
 
-    final String name;
-    final Type type;
-    boolean primaryKey;
-    boolean autoincrement;
-    boolean unique;
-    boolean nullable = true;
+    private final String name;
+    private final Type type;
+    private boolean primaryKey;
+    private boolean autoincrement;
+    private boolean unique;
+    private boolean nullable = true;
 
     private Column(String name, Type type) {
         this.name = name;
@@ -52,6 +52,6 @@ public class Column {
     }
 
     public String build() {
-        return joiner.join(name, type, primaryKey ? "primary key" : null, autoincrement ? "autoincrement" : null, unique && !primaryKey ? "unique" : null, (nullable | primaryKey | unique)? null : "not null");
+        return joiner.join(name, type, primaryKey ? "primary key" : null, autoincrement ? "autoincrement" : null, unique && !primaryKey ? "unique" : null, (nullable | primaryKey | unique) ? null : "not null");
     }
 }

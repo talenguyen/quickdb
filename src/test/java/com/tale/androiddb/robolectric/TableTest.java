@@ -24,7 +24,8 @@ public class TableTest {
         assertEquals(expected, deleteStatement);
     }
 
-    @Test public void testCreate() {
+    @Test
+    public void testCreate() {
         String expected = "create table table (name INTEGER primary key autoincrement,value TEXT not null);";
         String createStatement = Table.with("table")
                 .columns(

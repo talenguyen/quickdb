@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          android:versionCode="2"
-          android:versionName="1.0.0-SNAPSHOT"
-          package="com.tale.androiddb">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.tale.androiddb"
+    android:versionCode="2"
+    android:versionName="1.0.0-SNAPSHOT">
 
-    <uses-sdk android:minSdkVersion="18"
-              android:targetSdkVersion="18"/>
+    <uses-sdk
+        android:minSdkVersion="18"
+        android:targetSdkVersion="18" />
 
-    <application android:name=".DeckardApplication">
+    <application
+        android:name=".DeckardApplication"
+        android:allowBackup="true"
+        tools:ignore="MissingApplicationIcon">
 
         <activity android:name=".robolectric.DeckardActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 

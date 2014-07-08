@@ -30,7 +30,7 @@ class DBObjectControllerImpl implements DBObjectController {
     public int update(Entry object) {
         try {
             dbController.open();
-            return dbController.update(object.getTable(), sqLiteObjectHelper.buildContentValues(object), "_id LIKE ?", new String[]{String.valueOf(object.get_id())});
+            return dbController.update(object.getTable(), sqLiteObjectHelper.buildContentValues(object), "_id LIKE ?", String.valueOf(object.get_id()));
         } finally {
             dbController.close();
         }
@@ -48,7 +48,7 @@ class DBObjectControllerImpl implements DBObjectController {
     public int delete(Entry object) {
         try {
             dbController.open();
-            return dbController.delete(object.getTable(), "_id LIKE ?", new String[]{String.valueOf(object.get_id())});
+            return dbController.delete(object.getTable(), "_id LIKE ?", String.valueOf(object.get_id()));
         } finally {
             dbController.close();
         }
@@ -58,7 +58,7 @@ class DBObjectControllerImpl implements DBObjectController {
         Cursor cursor = null;
         try {
             dbController.open();
-            cursor = dbController.quickQuery(table, "_id LIKE ?", new String[]{String.valueOf(id)});
+            cursor = dbController.quickQuery(table, "_id LIKE ?", String.valueOf(id));
             if (cursor != null && cursor.moveToFirst()) {
                 return sqLiteObjectHelper.buildObject(table, cursor);
             }

@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 public class DBControllerTest {
 
-    DBController dbController;
+    private DBController dbController;
 
     @Before
     public void setUp() {
@@ -79,7 +79,7 @@ public class DBControllerTest {
         assertTrue(id > 0);
 
         // Query the inserted
-        Cursor cursor = dbController.quickQuery("test", "name LIKE ?", new String[]{"Giang"});
+        Cursor cursor = dbController.quickQuery("test", "name LIKE ?", "Giang");
         assertNotNull(cursor);
 
         assertTrue(cursor.moveToFirst());
@@ -88,10 +88,10 @@ public class DBControllerTest {
         assertEquals(name, "Giang");
 
         // Delete the inserted
-        dbController.delete("test", "name LIKE ?", new String[]{"Giang"});
+        dbController.delete("test", "name LIKE ?", "Giang");
 
         // Query to check delete
-        cursor = dbController.quickQuery("test", "name LIKE ?", new String[]{"Giang"});
+        cursor = dbController.quickQuery("test", "name LIKE ?", "Giang");
 
         assertFalse(cursor.moveToFirst());
     }
